@@ -125,9 +125,10 @@ elif [[ "$bitbucket_type" == "cloud" ]]; then
 
     prs="[]"
     while read -r pullrequest; do
-        branch=$(echo "$pullrequest" | jq -r ".${branch_object}.branch.name")
-        if [[ "${source_branch}" ]]; then
-            [[ "${branch}" == "${source_branch}" ]] || continue
+        branch=$(echo "$pullrequest" | jq -r ".source.branch.name")
+        destination_branch=$(echo "$pullrequest" | jq -r ".destination.branch.name")
+        if [[ "${destination_branch}" != "${source_branch}" ]]; then
+             continue
         fi
         id=$(echo "$pullrequest" | jq -r '.id')
         title=$(echo "$pullrequest" | jq -r '.title')
